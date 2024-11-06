@@ -51,6 +51,7 @@ function AddRecipeForm() {
       time: '',
       servings: '',
       notes: '',
+      links: '',
       ingredients: [],
       steps: []
     });
@@ -81,101 +82,151 @@ function AddRecipeForm() {
   };
 
   return (
-    <form className="form-group" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={newRecipe.name}
-        onChange={(e) => setNewRecipe({ ...newRecipe, name: e.target.value })}
-        placeholder="Recipe Name"
-        required
-      />
-      <textarea
-        value={newRecipe.description}
-        onChange={(e) =>
-          setNewRecipe({ ...newRecipe, description: e.target.value })
-        }
-        placeholder="Description"
-      />
-
-      <div className="input-container">
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="name" className="form-title mb-sm">
+        Recipe Name
         <input
           type="text"
-          value={newRecipe.time}
-          onChange={(e) => setNewRecipe({ ...newRecipe, time: e.target.value })}
-          placeholder="Cooking time"
-        />
-        <input
-          type="text"
-          value={newRecipe.servings}
-          onChange={(e) =>
-            setNewRecipe({ ...newRecipe, servings: e.target.value })
-          }
-          placeholder="Servings"
-        />
-      </div>
-
-      <input
-        type="text"
-        value={newRecipe.image}
-        onChange={(e) => setNewRecipe({ ...newRecipe, image: e.target.value })}
-        placeholder="Image URL"
-      />
-
-      {ingredientFields.map((field, index) => (
-        <div className="input-container" key={index}>
-          <input
-            type="text"
-            placeholder="Ingredient name"
-            value={field.name}
-            onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Amount"
-            value={field.amount}
-            onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Amount type"
-            value={field.amountType}
-            onChange={(e) => handleIngredientChange(index, 'amountType', e.target.value)}
-            required
-          />
-        </div>
-      ))}
-      <button onClick={addIngredientField}>Add Ingredient</button>
-
-      {stepFields.map((step, index) => (
-        <textarea
-          key={index}
-          value={step}
-          onChange={(e) => handleStepChange(index, e.target.value)}
-          placeholder={`Step ${index + 1}`}
+          id="name"
+          value={newRecipe.name}
+          onChange={(e) => setNewRecipe({ ...newRecipe, name: e.target.value })}
+          placeholder="Recipe Name"
           required
         />
-      ))}
-      <button onClick={addStepField}>Add Step</button>
+      </label>
 
-      <textarea
-        type="text"
-        value={newRecipe.notes}
-        onChange={(e) =>
-          setNewRecipe({ ...newRecipe, notes: e.target.value })
-        }
-        placeholder="Notes"
-      />
-      <textarea
-        type="text"
-        value={newRecipe.links}
-        onChange={(e) =>
-          setNewRecipe({ ...newRecipe, links: e.target.value })
-        }
-        placeholder="Links"
-      />
-      <button type="submit">Add Recipe</button>
+      <label htmlFor="description" className="form-title mb-sm">
+        Description
+        <textarea
+          id="description"
+          value={newRecipe.description}
+          onChange={(e) =>
+            setNewRecipe({ ...newRecipe, description: e.target.value })
+          }
+          placeholder="Description"
+        />
+      </label>
+
+      <div className="form-group mb-sm">
+        <label htmlFor="time" className="form-title">
+          Cooking Time
+          <input
+            type="text"
+            id="time"
+            value={newRecipe.time}
+            onChange={(e) => setNewRecipe({ ...newRecipe, time: e.target.value })}
+            placeholder="Cooking time"
+          />
+        </label>
+        <label htmlFor="servings" className="form-title">
+          Servings
+          <input
+            type="text"
+            id="servings"
+            value={newRecipe.servings}
+            onChange={(e) =>
+              setNewRecipe({ ...newRecipe, servings: e.target.value })
+            }
+            placeholder="Servings"
+          />
+        </label>
+      </div>
+
+      <label htmlFor="image" className="form-title mb-sm">
+        Image URL
+        <input
+          type="text"
+          id="image"
+          value={newRecipe.image}
+          onChange={(e) => setNewRecipe({ ...newRecipe, image: e.target.value })}
+          placeholder="Image URL"
+        />
+      </label>
+
+      <div className="mb-sm">
+        <div className="form-title mb-sm">Ingredients</div>
+        {ingredientFields.map((field, index) => (
+          <div className="form-group" key={index}>
+            <label htmlFor={`ingredient-name-${index}`}>
+              Name
+              <input
+                type="text"
+                id={`ingredient-name-${index}`}
+                placeholder="Ingredient name"
+                value={field.name}
+                onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
+                required
+              />
+            </label>
+            <label htmlFor={`ingredient-amount-${index}`}>
+              Amount
+              <input
+                type="number"
+                id={`ingredient-amount-${index}`}
+                placeholder="Amount"
+                value={field.amount}
+                onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
+                required
+              />
+            </label>
+            <label htmlFor={`ingredient-type-${index}`}>
+              Amount Type
+              <input
+                type="text"
+                id={`ingredient-type-${index}`}
+                placeholder="Amount type"
+                value={field.amountType}
+                onChange={(e) => handleIngredientChange(index, 'amountType', e.target.value)}
+                required
+              />
+            </label>
+          </div>
+        ))}
+        <button className="mt-sm" onClick={addIngredientField}>Add Ingredient</button>
+      </div>
+
+      <div className="mb-sm">
+        <div className="form-title mb-sm">Steps</div>
+        {stepFields.map((step, index) => (
+          <label htmlFor={`step-${index}`} key={index}>
+            Step {index + 1}
+            <textarea
+              id={`step-${index}`}
+              value={step}
+              onChange={(e) => handleStepChange(index, e.target.value)}
+              placeholder={`Step ${index + 1}`}
+              required
+            />
+          </label>
+        ))}
+        <button className="mt-sm" onClick={addStepField}>Add Step</button>
+      </div>
+
+      <label htmlFor="notes" className="form-title mb-sm">
+        Notes
+        <textarea
+          id="notes"
+          value={newRecipe.notes}
+          onChange={(e) =>
+            setNewRecipe({ ...newRecipe, notes: e.target.value })
+          }
+          placeholder="Notes"
+        />
+      </label>
+
+      <label htmlFor="links" className="form-title mb-sm">
+        Links
+        <textarea
+          id="links"
+          value={newRecipe.links}
+          onChange={(e) =>
+            setNewRecipe({ ...newRecipe, links: e.target.value })
+          }
+          placeholder="Links"
+        />
+      </label>
+
+      <button type="submit" className="mt-sm">Add Recipe</button>
     </form>
   );
 }
