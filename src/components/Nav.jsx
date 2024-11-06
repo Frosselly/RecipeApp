@@ -7,6 +7,8 @@ export default function Nav() {
         <li>Mamos receptai</li>
         <li><Link to="/">Home</Link> </li>
         <li><Link to="add-recipe">Kurti recepta</Link></li>
+        <li><Link to="login">Prisijungti</Link></li>
+        <li><Link to="register">Registruotis</Link></li>
       </ul>
       {/* <p>Receptai</p> */}
       {/* <NavLink

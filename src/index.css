@@ -54,7 +54,6 @@ main {
 /* Footer Styles */
 
 footer {
-  position: fixed; /* or absolute, depending on your needs */
   bottom: 0;
   width: 100%;
   background-color: #333; /* Example background color */
@@ -91,4 +90,10 @@ footer p {
  nav li {
     margin-bottom: 1em;
   }
+}
+
+.recipe-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2em;
 }

@@ -2,14 +2,12 @@ import { useState } from "react";
 import "./form.css";
 
 function AddRecipeForm() {
-  const [newRecipe, setNewRecipe] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     time: "",
     servings: "",
     image: "",
     description: "",
-    ingredients: [],
-    steps: [],
     notes: "",
     links: "",
     lastUpdated: new Date().toISOString(),
@@ -18,42 +16,44 @@ function AddRecipeForm() {
   const [ingredientFields, setIngredientFields] = useState([{ name: '', amount: '', amountType: '' }]);
   const [stepFields, setStepFields] = useState(['']);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Gather ingredients and steps from fields
     const ingredients = ingredientFields
-      .filter(field => field.name && field.amount) // Skip empty fields
+      .filter(field => field.name && field.amount)
       .map(field => ({
         name: field.name,
         amount: field.amount,
-        amountType: field.amountType || 'units' // Default unit
+        amountType: field.amountType || 'units'
       }));
 
-    const steps = stepFields.filter(step => step.trim()); // Skip empty steps
-
-    // Update recipe with all form data
+    const steps = stepFields.filter(step => step.trim());
+    
     const updatedRecipe = {
-      ...newRecipe,
+      ...formData,
       ingredients,
       steps,
       createdAt: new Date().toISOString(),
-      id: crypto.randomUUID(), // Generate unique ID
+      id: crypto.randomUUID(),
     };
 
-    // Save recipe (assuming there's a save function passed as prop)
     onSaveRecipe(updatedRecipe);
-
-    // Reset form
-    setNewRecipe({
+    
+    setFormData({
       name: '',
       description: '',
       time: '',
       servings: '',
       notes: '',
       links: '',
-      ingredients: [],
-      steps: []
     });
     setIngredientFields([{ name: '', amount: '', amountType: '' }]);
     setStepFields(['']);
@@ -82,71 +82,79 @@ function AddRecipeForm() {
   };
 
   return (
+    <>
+    <h2 className="form-title">Add Recipe</h2>
     <form onSubmit={handleSubmit}>
-      <label htmlFor="name" className="form-title mb-sm">
+      <label htmlFor="name" className="field-title mb-sm">
         Recipe Name
         <input
           type="text"
           id="name"
-          value={newRecipe.name}
-          onChange={(e) => setNewRecipe({ ...newRecipe, name: e.target.value })}
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
           placeholder="Recipe Name"
           required
+          maxLength={50}
         />
       </label>
 
-      <label htmlFor="description" className="form-title mb-sm">
+      <label htmlFor="description" className="field-title mb-sm">
         Description
         <textarea
           id="description"
-          value={newRecipe.description}
-          onChange={(e) =>
-            setNewRecipe({ ...newRecipe, description: e.target.value })
-          }
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
           placeholder="Description"
+          maxLength={500}
         />
       </label>
 
       <div className="form-group mb-sm">
-        <label htmlFor="time" className="form-title">
+        <label htmlFor="time" className="field-title">
           Cooking Time
           <input
             type="text"
             id="time"
-            value={newRecipe.time}
-            onChange={(e) => setNewRecipe({ ...newRecipe, time: e.target.value })}
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
             placeholder="Cooking time"
+            maxLength={20}
           />
         </label>
-        <label htmlFor="servings" className="form-title">
+        <label htmlFor="servings" className="field-title">
           Servings
           <input
             type="text"
             id="servings"
-            value={newRecipe.servings}
-            onChange={(e) =>
-              setNewRecipe({ ...newRecipe, servings: e.target.value })
-            }
+            name="servings"
+            value={formData.servings}
+            onChange={handleChange}
             placeholder="Servings"
+            maxLength={10}
           />
         </label>
       </div>
 
-      <label htmlFor="image" className="form-title mb-sm">
+      <label htmlFor="image" className="field-title mb-sm">
         Image URL
         <input
           type="text"
           id="image"
-          value={newRecipe.image}
-          onChange={(e) => setNewRecipe({ ...newRecipe, image: e.target.value })}
+          name="image"
+          value={formData.image}
+          onChange={handleChange}
           placeholder="Image URL"
+          maxLength={255}
         />
       </label>
 
-      <div className="mb-sm">
-        <div className="form-title mb-sm">Ingredients</div>
+      <div className="ingredient-group mb-sm">
+        <div className="field-title mb-sm">Ingredients</div>
         {ingredientFields.map((field, index) => (
-          <div className="form-group" key={index}>
+          <div className="ingredient-input" key={index}>
             <label htmlFor={`ingredient-name-${index}`}>
               Name
               <input
@@ -156,6 +164,7 @@ function AddRecipeForm() {
                 value={field.name}
                 onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
                 required
+                maxLength={50}
               />
             </label>
             <label htmlFor={`ingredient-amount-${index}`}>
@@ -167,6 +176,7 @@ function AddRecipeForm() {
                 value={field.amount}
                 onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
                 required
+                max={999}
               />
             </label>
             <label htmlFor={`ingredient-type-${index}`}>
@@ -178,6 +188,7 @@ function AddRecipeForm() {
                 value={field.amountType}
                 onChange={(e) => handleIngredientChange(index, 'amountType', e.target.value)}
                 required
+                maxLength={20}
               />
             </label>
           </div>
@@ -186,9 +197,9 @@ function AddRecipeForm() {
       </div>
 
       <div className="mb-sm">
-        <div className="form-title mb-sm">Steps</div>
+        <div className="field-title mb-sm">Steps</div>
         {stepFields.map((step, index) => (
-          <label htmlFor={`step-${index}`} key={index}>
+          <label className="cooking-step-input" htmlFor={`step-${index}`} key={index}>
             Step {index + 1}
             <textarea
               id={`step-${index}`}
@@ -196,38 +207,40 @@ function AddRecipeForm() {
               onChange={(e) => handleStepChange(index, e.target.value)}
               placeholder={`Step ${index + 1}`}
               required
+              maxLength={500}
             />
           </label>
         ))}
         <button className="mt-sm" onClick={addStepField}>Add Step</button>
       </div>
 
-      <label htmlFor="notes" className="form-title mb-sm">
+      <label htmlFor="notes" className="field-title mb-sm">
         Notes
         <textarea
           id="notes"
-          value={newRecipe.notes}
-          onChange={(e) =>
-            setNewRecipe({ ...newRecipe, notes: e.target.value })
-          }
+          name="notes"
+          value={formData.notes}
+          onChange={handleChange}
           placeholder="Notes"
+          maxLength={1000}
         />
       </label>
 
-      <label htmlFor="links" className="form-title mb-sm">
+      <label htmlFor="links" className="field-title mb-sm">
         Links
         <textarea
           id="links"
-          value={newRecipe.links}
-          onChange={(e) =>
-            setNewRecipe({ ...newRecipe, links: e.target.value })
-          }
+          name="links"
+          value={formData.links}
+          onChange={handleChange}
           placeholder="Links"
+          maxLength={500}
         />
       </label>
 
-      <button type="submit" className="mt-sm">Add Recipe</button>
+      <button type="submit" className="submit-btn mt-sm">Add Recipe</button>
     </form>
+    </>
   );
 }
 

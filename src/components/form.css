@@ -10,6 +10,7 @@
   --color-border: #ddd;
   --color-text: #333;
   --color-focus: #aaa;
+  --color-primary: #A2559D;
   
   /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -19,7 +20,13 @@
 .mb-sm { margin-bottom: var(--spacing-sm); }
 .mt-sm { margin-top: var(--spacing-sm); }
 
-/* Base Form Styles */
+.form-title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-primary);
+}
+
+
 form {
   display: flex;
   flex-direction: column;
@@ -28,8 +35,8 @@ form {
   max-width: 500px;
   margin: var(--spacing-lg) auto;
   padding: var(--spacing-lg);
-  background-color: var(--color-bg);
-  box-shadow: var(--shadow-sm);
+  /* background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm); */
   border-radius: 8px;
 }
 
@@ -40,7 +47,27 @@ form {
   flex: 1;
 }
 
-.form-title {
+.ingredient-group{
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.ingredient-input{
+  display: grid;
+  gap: var(--spacing-sm);
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.ingredient-input label{
+  gap: 0;
+}
+.cooking-step-input{
+  margin: 0;
+}
+
+.field-title {
   font-weight: 600;
   display: block;
   margin-bottom: var(--spacing-xs);
@@ -59,7 +86,7 @@ textarea {
   width: 100%;
   padding: var(--spacing-xs);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  /* border-radius: 4px; */
   font-family: 'Inter', sans-serif;
 }
 
@@ -72,6 +99,8 @@ textarea:focus {
 
 textarea {
   resize: vertical;
+  max-height: 200px; 
+  overflow-y: auto; 
 }
 
 button {
@@ -85,16 +114,23 @@ button {
 }
 
 button:hover {
-  background-color: #444; /* Slightly darker on hover */
+  background-color: #444; 
 }
 
-/* Example of form validation styling (optional) */
+
 input.invalid,
 textarea.invalid {
-  border-color: #f66; /* Red border for invalid fields */
+  border-color: #f66; 
 }
 
 input.valid,
 textarea.valid {
-  border-color: #6f6; /* Green border for valid fields */
+  border-color: #6f6; 
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }

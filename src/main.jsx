@@ -9,6 +9,8 @@ import Recipe from './components/Recipe';
 import AddRecipeForm from './components/AddRecipeForm';
 import Root from './components/root';
 import HomePage from './components/HomePage';
+import LoginForm from './components/loginForm';
+import RegisterForm from './components/registerForm';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "add-recipe",
         element: <AddRecipeForm />,
+      },
+      {
+        path: "login",
+        element: <LoginForm />,
+      },
+      {
+        path: "register",
+        element: <RegisterForm />,
       },
     ],
   },
