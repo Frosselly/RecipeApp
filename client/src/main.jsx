@@ -1,0 +1,53 @@
+import { Route, Routes } from "react-router";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import "./App.css";
+import { BrowserRouter as Router } from 'react-router'
+import { UserContextProvider } from "./UserContext.jsx";
+
+// import Recipe from './components/Recipe';
+// import HomePage from './components/HomePage';
+// import Nav from './components/Nav';
+// import AddRecipeForm from './components/Form/AddRecipeForm';
+import Root from "./components/root";
+import HomePage from "./components/HomePage";
+// import LoginForm from './components/Form/loginForm';
+// import RegisterForm from './components/Form/registerForm';
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from './pages/LoginPage';
+import NewRecipePage from "./pages/NewRecipePage.jsx";
+import AllRecipePage from "./pages/AllRecipePage.jsx";
+import RecipePage from "./pages/RecipePage.jsx";
+import EditPage from "./pages/EditPage.jsx";
+
+
+
+const routes = (
+  <Routes>
+    <Route path="/" element={<Root />}>
+      <Route index element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/add-recipe" element={<NewRecipePage />} />
+      <Route path="/recipe" element={<AllRecipePage />} />
+      <Route path="/recipes/:id" element={<RecipePage />} />
+      <Route path="/edit/:id" element={<EditPage />} />
+      {/* <Route path="/post/:id" element={<PostPage />} />
+      <Route path="/create" element={<CreatePost />} />
+      <Route path="/edit/:id" element={<EditPost />} /> */}
+    </Route>
+  </Routes>
+);
+
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Router>
+    <UserContextProvider>
+      {routes}
+    </UserContextProvider>
+    </Router>
+    
+  </StrictMode>
+);

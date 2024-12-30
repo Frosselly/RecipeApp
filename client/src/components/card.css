@@ -1,0 +1,28 @@
+.card-link {
+    padding-left: 10px; 
+    padding-bottom: 5px;
+    min-height: 20px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.recipe-card {
+    width: min-content;
+    border-radius: 16px;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s ease;
+    padding: 10px; /* optional padding for the entire card */
+    overflow: hidden; /* Prevents overflowing content */
+}
+
+
+.recipe-image{ 
+    background-color: #F7F7F8;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: "contain";
+}
