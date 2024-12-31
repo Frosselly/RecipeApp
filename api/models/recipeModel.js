@@ -1,6 +1,6 @@
 const db = require("../database");
 
-//TODO - fix ingredient query
+
 const insertIngredients = async (ingredients) => {
   const query = `
         INSERT INTO Ingredients (name, amount, amount_type, recipe_id) 
@@ -17,6 +17,50 @@ const insertIngredients = async (ingredients) => {
     affectedRows: result.affectedRows,
   };
 };
+
+const insertCategories = async (categories) => {
+  const query = `
+        INSERT IGNORE INTO Categories (name) 
+        VALUES ?
+      `;
+
+  // Format categories for bulk insert
+  const values = categories.map((cat) => [cat.name]);
+
+  const result = await db.query(query, [values]);
+
+  const firstId = result.insertId;
+  const numberOfRows = result.affectedRows;
+  const allIds = numberOfRows > 0 
+  ? Array.from({ length: numberOfRows }, (_, i) => firstId + i) 
+  : [];
+  return allIds;
+}
+
+const getCategoriesIds = async (categoryNames) => {
+  const query = `
+        SELECT id FROM Categories 
+        WHERE name IN (?)
+      `;
+
+  const result = await db.query(query, [categoryNames]);
+  console.log("getCategoriesIds ", result)
+  return result.map((row) => row.id);
+}
+
+const bindRecipeToCategories = async (categories, recipe_id) => {
+  const query = `
+        INSERT INTO Recipe_Category (recipe_id, category_id) 
+        VALUES ?
+      `;
+
+  // Format categories for bulk insert
+  const values = categories.map((cat) => [recipe_id, cat]);
+
+  const result = await db.query(query, [values]);
+
+  return result
+}
 
 
 const insertRecipe = async ({
@@ -83,7 +127,7 @@ const insertRecipe = async ({
 // };
 
 const findRecipeById = async (id) => {
-  const query = "SELECT * FROM Recipes WHERE id = ?";
+  const query = "SELECT * FROM Recipes WHERE id = ? LIMIT 1";
   const results = await db.query(query, [id]);
   return results[0];
 };
@@ -174,6 +218,32 @@ const getAllRecipes = async () => {
   return results;
 }
 
+const getAllCategories = async () => {
+  const query = "SELECT * FROM Categories";
+  const results = await db.query(query);
+  return results;
+}
+
+const getRecipeCategories = async (recipeId) => {
+  const query = `
+          SELECT * FROM Categories 
+          WHERE id IN (
+          SELECT category_id FROM Recipe_Category 
+          WHERE recipe_id = ?) 
+        `;
+
+  const result = await db.query(query, [recipeId]);
+  return result;
+};
+
+const deleteBoundCategories = async (idsToDelete, recipeId) => {
+  const query = `
+          DELETE FROM Recipe_Category 
+          WHERE recipe_id = ? AND category_id IN (?)
+        `;
+  const result = await db.query(query, [recipeId, idsToDelete]);
+  return result;
+}
 
 
 module.exports = {
@@ -184,5 +254,11 @@ module.exports = {
   getRecipeIngredients,
   updateIngredient,
   deleteIngredients,
-  getAllRecipes
+  getAllRecipes,
+  getAllCategories,
+  insertCategories,
+  bindRecipeToCategories,
+  getRecipeCategories,
+  deleteBoundCategories,
+  getCategoriesIds
 };

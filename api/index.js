@@ -23,7 +23,20 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //TODO -seperate the enviromental stuff
 
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    // Handle multer-specific errors
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      // Custom error message for file size limit exceeded
+      return res.status(400).json({ error: 'File is too large. Maximum size is 5MB.' });
+    }
+    // Handle other multer errors
+    return res.status(500).json({ error: `Multer error: ${err.message}` });
+  }
 
+  // Handle any other errors
+  next(err);
+});
 
 const db = require("./database");
 
@@ -94,7 +107,28 @@ app.get('/profile', async (req, res) => {
     });
 })
 
+app.get('/search', async (req, res) => {
+  const searchTerm = req.query.term;
   
+
+  if (!searchTerm) {
+      return res.status(400)
+          .json(
+              {
+                  error: 'Search term is required'
+              });
+  }
+
+  const query = `
+  SELECT * FROM Recipes
+    WHERE MATCH(title, description) AGAINST (? IN BOOLEAN MODE);`;
+    
+const adjustedSearchTerm = `+${searchTerm}*`;
+results = await db.query(query, [adjustedSearchTerm])
+res.json(results);
+
+
+});
   
 
 app.listen(4000, () => {
