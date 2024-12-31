@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import SearchBar from "./searchBar";
+import { Link } from "react-router";
 
 export default function HomePage() {
   const [recipes, setRecipes] = useState([]);
@@ -10,7 +11,6 @@ export default function HomePage() {
     fetch("http://localhost:4000/recipe")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       setRecipes(data);
     })
   
@@ -25,7 +25,10 @@ export default function HomePage() {
       <hr />
       <div className="hero">
       <h2>Rask šiandienos gardumyną</h2>
-      <SearchBar onSearch={(searchTerm) => console.log(searchTerm)} />
+      <SearchBar onSearch={(searchTerm) => {
+        // Handle navigation here
+
+      }} />
       </div>
       <div className="hero">
       <h2>Rinkis ką nori</h2>

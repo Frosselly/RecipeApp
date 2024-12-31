@@ -57,7 +57,7 @@ form {
 .ingredient-input{
   display: grid;
   gap: var(--spacing-sm);
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr;
 }
 
 .ingredient-input label{
@@ -90,8 +90,8 @@ textarea {
   font-family: 'Inter', sans-serif;
 }
 
-input:focus,
-textarea:focus {
+.field-title input:focus,
+.field-title textarea:focus {
   outline: none;
   border-color: var(--color-focus);
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-focus);

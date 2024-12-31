@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../components/Form/form.css";
 import { useParams, Navigate } from "react-router";
+import CreatableSelect from "react-select/creatable";
 
 export default function EditPage() {
   const { id } = useParams();
@@ -11,6 +12,14 @@ export default function EditPage() {
   const [stepFields, setStepFields] = useState([""]);
   const [redirect, setRedirect] = useState(false);
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [categories, setCategories] = useState([
+    { value: "ocean", label: "Ocean" },
+    { value: "blue", label: "Blue" },
+  ]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
 
   useEffect(() => {
     fetch(`http://localhost:4000/recipe/${id}`)
@@ -23,10 +32,15 @@ export default function EditPage() {
           porcijos: data.servings,
           paveikslėlis: data.file,
           pastabos: data.notes,
-          nuorodos: data.links,
-          
+          nuorodos: data.links
+
           // Set other form fields as needed
         });
+
+        if(data.categories){
+          setSelectedCategories(data.categories.map(category => ({ label: category.name, value: category.id })));
+          
+        }
 
         if (data.ingredients) {
           setIngredientFields(
@@ -42,10 +56,32 @@ export default function EditPage() {
         if (data.steps) {
           setStepFields(JSON.parse(data.steps));
         }
-
-
+      });
+    fetch("http://localhost:4000/category")
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(
+          (data || []).map((category) => ({
+            value: category.id,
+            label: category.name,
+          }))
+        );
       });
   }, [id]);
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]; // Get the file selected by the user
+    if (file) {
+      setImage(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set the image as data URL for preview
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -60,6 +96,7 @@ export default function EditPage() {
     data.set("steps", JSON.stringify(stepFields));
     data.set("links", formData.nuorodos);
     data.set("ingredients", JSON.stringify(ingredientFields));
+    data.append("categories", JSON.stringify(selectedCategories));
     // data.append("paskutinisAtnaujinimas", new Date().toISOString());
     if (image?.[0]) {
       data.set("image", image?.[0]);
@@ -70,15 +107,14 @@ export default function EditPage() {
       body: data,
       credentials: "include",
     });
-    
+
     // Redirect to the recipe page
     if (response.ok) {
       setRedirect(true);
     }
-    
   }
 
-  if(redirect) {
+  if (redirect) {
     return <Navigate to={`/recipes/${id}`} />;
   }
 
@@ -114,11 +150,12 @@ export default function EditPage() {
     setStepFields([...stepFields, ""]);
   };
 
+
   return (
     <>
       <div className="hero">
         {" "}
-        <h2 className="form-title">Kurti receptą</h2>
+        <h2 className="form-title">Redaguoti receptą</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -148,6 +185,35 @@ export default function EditPage() {
           />
         </label>
 
+        
+
+        <label htmlFor="tagai" className="mb-sm">
+          Kategorijos
+        <CreatableSelect
+          isMulti
+          value={selectedCategories}
+          options={categories}
+          onChange={(selectedOptions) => {
+            setSelectedCategories(selectedOptions.map(option => ({ label: option.label, value: typeof option.value === 'string' ? null : option.value })));
+          }}
+        />
+        </label>
+
+        <label htmlFor="nuotrauka" className="field-title mb-sm">
+        Nuotrauka
+          <input
+            type="file"
+            id="nuotrauka"
+            name="nuotrauka"
+            onChange={handleImageChange}
+            placeholder="Įveskite paveikslėlio URL"
+            accept="image/*"
+          />
+          <div id="previewContainer" className="image-preview">
+            <img src={imagePreview} alt="" />
+          </div>
+        </label>
+
         <div className="form-group mb-sm">
           <label htmlFor="laikas" className="field-title">
             Laikas
@@ -174,18 +240,6 @@ export default function EditPage() {
             />
           </label>
         </div>
-
-        <label htmlFor="paveikslėlis" className="field-title mb-sm">
-          Paveikslėlis
-          <input
-            type="file"
-            id="paveikslėlis"
-            name="paveikslėlis"
-            onChange={(e) => setImage(e.target.files)}
-            placeholder="Įveskite paveikslėlio URL"
-            maxLength={255}
-          />
-        </label>
 
         <div className="ingredient-group mb-sm">
           <div className="field-title mb-sm">Ingredientai</div>

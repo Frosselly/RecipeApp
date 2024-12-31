@@ -20,6 +20,7 @@ import NewRecipePage from "./pages/NewRecipePage.jsx";
 import AllRecipePage from "./pages/AllRecipePage.jsx";
 import RecipePage from "./pages/RecipePage.jsx";
 import EditPage from "./pages/EditPage.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
 
 
 
@@ -33,6 +34,7 @@ const routes = (
       <Route path="/recipe" element={<AllRecipePage />} />
       <Route path="/recipes/:id" element={<RecipePage />} />
       <Route path="/edit/:id" element={<EditPage />} />
+      <Route path="/search" element={<SearchPage />} />
       {/* <Route path="/post/:id" element={<PostPage />} />
       <Route path="/create" element={<CreatePost />} />
       <Route path="/edit/:id" element={<EditPost />} /> */}

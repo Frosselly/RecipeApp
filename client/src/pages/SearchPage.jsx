@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import './searchBar.css';
-import MagnifyGlass from '../assets/MagnifyGlass.svg';
-import { Link } from 'react-router';
 import RecipeCard from '../components/RecipeCard';
 
-const SearchBar = () => {
+const SearchPage = () => {
     const [term, setTerm] = useState('');
     const [recipes, setRecipes] = useState([]);
 
@@ -23,33 +20,29 @@ const SearchBar = () => {
             console.error('Error fetching search results:', error);
         }
     };
+    
 
     return (
-        <>
-        
-        <form onSubmit={handleSearch} className="search-container">
-            <div className="search-wrapper">
+        <div>
+            <h1>Search Page</h1>
+            <form onSubmit={handleSearch}>
                 <input
                     type="text"
                     value={term}
                     onChange={(e) => setTerm(e.target.value)}
                     placeholder="Search..."
-                    className="search-input"
-                    />
-                <button type="submit" className="search-button">
-                    <img src={MagnifyGlass} alt="search" className="search-icon" />
-                </button>
-                <Link to="/search">I paieską</Link>
-            </div>
-        </form>
+                />
+                <button type="submit">Search</button>
+            </form>
 
             <div className="recipe-grid">
-            {recipes.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
-            ))}
-            </div>
-            </>
+                  <br />
+                    {recipes.map((recipe) => (
+                      <RecipeCard key={recipe.id} recipe={recipe} />
+                    ))}
+                  </div>
+        </div>
     );
 };
 
-export default SearchBar;
+export default SearchPage;
