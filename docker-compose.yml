@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: recipeapp-mysql
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+    volumes:
+      - db:/var/lib/mysql
+    command: ["--bind-address=0.0.0.0"]
+    ports:
+      - "3307:3306"
+    restart: always
+
+  # Backend (API)
+  api:
+    build:
+      context: ./api
+    container_name: recipeapp-api
+    env_file:
+    - ./api/.env
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./api:/app
+    command: sh -c "node index.js"
+    depends_on:
+      - mysql
+    stdin_open: true
+    tty: true
+  
+  # frontend
+  client:
+    build:
+      context: ./client
+    container_name: recipeapp-client
+    ports:
+      - "5173:5173" 
+    volumes:
+      - ./client:/app
+    command: pnpm dev  
+
+  
+
+volumes:
+  db:
