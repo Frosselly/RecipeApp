@@ -33,11 +33,11 @@ export default function LoginPage(){
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Login</h1>
-            <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
-            <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-            <button type="submit">Login</button>
+        <form className='login-form' onSubmit={handleSubmit}>
+            <h1>Prisijungimas</h1>
+            <input type="text" placeholder="Slapyvardis" onChange={(e) => setUsername(e.target.value)}/>
+            <input type="password" placeholder="Slaptažodis" onChange={(e) => setPassword(e.target.value)}/>
+            <button type="submit">Prisijungti</button>
         </form>
     );
 };

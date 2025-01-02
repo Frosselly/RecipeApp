@@ -1,22 +1,18 @@
 :root {
-  /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 0.75rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   
-  /* Colors */
   --color-bg: #fff;
   --color-border: #ddd;
   --color-text: #333;
   --color-focus: #aaa;
   --color-primary: #A2559D;
   
-  /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Layout Classes */
 .mb-sm { margin-bottom: var(--spacing-sm); }
 .mt-sm { margin-top: var(--spacing-sm); }
 
@@ -35,12 +31,16 @@ form {
   max-width: 500px;
   margin: var(--spacing-lg) auto;
   padding: var(--spacing-lg);
-  /* background-color: var(--color-bg);
-  box-shadow: var(--shadow-sm); */
+  
   border-radius: 8px;
 }
 
-/* Form Elements */
+.login-form, .register-form, .newRecipe-form, .editRecipe-form {
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+
 .form-group {
   display: flex;
   gap: var(--spacing-sm);
@@ -86,7 +86,6 @@ textarea {
   width: 100%;
   padding: var(--spacing-xs);
   border: 1px solid var(--color-border);
-  /* border-radius: 4px; */
   font-family: 'Inter', sans-serif;
 }
 

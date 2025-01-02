@@ -12,7 +12,7 @@ const AllRecipePage = () => {
 
     return (
         <div>
-            <h1>All Recipes</h1>
+            <h1>Visi receptai</h1>
             {recipes.map((recipe) => (
                 <div key={recipe.id}>
                     <h2>{recipe.title}</h2>

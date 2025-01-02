@@ -1,14 +1,12 @@
-/* Import Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
 
-/* Reset Styles */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Global Styles */
 body {
   font-family: 'Inter', sans-serif;
   font-size: 16px;
@@ -20,13 +18,11 @@ body {
 #root {
   background-color: #F7F7F8;
 }
-/* Typography */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Navigation */
 nav {
   background-color: #333;
   color: #fff;
@@ -60,7 +56,6 @@ nav a.logo {
   font-size: 1.5rem;
 }
 
-/* Hero Section */
 .hero {
   text-align: center;
   padding: 4em 0;
@@ -87,7 +82,6 @@ nav a.logo {
   font-size: 16px;
 }
 
-/* Form Styles */
 .login, .register {
   max-width: 400px;
   margin: 0 auto;
@@ -113,8 +107,6 @@ button {
   border-radius: 5px;
   padding: 7px 0;
 }
-
-
 
 
 footer {

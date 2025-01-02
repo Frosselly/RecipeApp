@@ -2,18 +2,11 @@ import { Route, Routes } from "react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import "./App.css";
 import { BrowserRouter as Router } from 'react-router'
 import { UserContextProvider } from "./UserContext.jsx";
 
-// import Recipe from './components/Recipe';
-// import HomePage from './components/HomePage';
-// import Nav from './components/Nav';
-// import AddRecipeForm from './components/Form/AddRecipeForm';
 import Root from "./components/root";
-import HomePage from "./components/HomePage";
-// import LoginForm from './components/Form/loginForm';
-// import RegisterForm from './components/Form/registerForm';
+import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from './pages/LoginPage';
 import NewRecipePage from "./pages/NewRecipePage.jsx";
@@ -35,9 +28,6 @@ const routes = (
       <Route path="/recipes/:id" element={<RecipePage />} />
       <Route path="/edit/:id" element={<EditPage />} />
       <Route path="/search" element={<SearchPage />} />
-      {/* <Route path="/post/:id" element={<PostPage />} />
-      <Route path="/create" element={<CreatePost />} />
-      <Route path="/edit/:id" element={<EditPost />} /> */}
     </Route>
   </Routes>
 );

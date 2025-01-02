@@ -41,6 +41,7 @@ const RecipePage = () => {
   if (!recipe) {
     return <div>Loading...</div>;
   }
+  console.log(recipe);
 
   return (
     <div className="recipe-page">
@@ -113,7 +114,7 @@ const RecipePage = () => {
                 {adjustedIngredients.map((ingredient, index) => (
                   <li key={index}>
                     <span className="ingredient-amount-type">
-                      {ingredient.amount.toFixed(2)} {ingredient.amount_type}
+                      {ingredient.amount} {ingredient.amount_type}
                     </span>
                     <span className="ingredient-name">{ingredient.name}</span>
                   </li>
@@ -133,10 +134,20 @@ const RecipePage = () => {
 
           <div className="recipe-right-column">
             <div className="notes-section">
+              <h3>Kategorijos</h3>
+              {recipe.categories.map((category) => (
+                <p key={category.id} className="category">
+                  {category.name}
+                </p>
+              ))}
+            </div>
+            <div className="notes-section">
               <h3>Pastabos</h3>
               <p>{recipe.notes}</p>
             </div>
           </div>
+          
+           
         </div>
       </div>
     </div>

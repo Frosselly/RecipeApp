@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../components/Form/form.css";
+import "../components/form.css";
 import CreatableSelect from "react-select/creatable";
 import { Navigate } from "react-router";
 
@@ -120,7 +120,7 @@ export default function NewRecipePage() {
         <h2 className="form-title">Kurti receptą</h2>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form className="newRecipe-form" onSubmit={handleSubmit}>
         <label htmlFor="pavadinimas" className="field-title mb-sm">
           Pavadinimas
           <input

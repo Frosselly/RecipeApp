@@ -1,4 +1,4 @@
-/* Recipe Page Container */
+
 .recipe-page {
     max-width: 1200px;
     margin: 40px auto;
@@ -8,7 +8,6 @@
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   }
   
-  /* Header Styles */
   .recipe-page h1 {
     text-align: center;
     margin: 0 0 16px;
@@ -33,7 +32,6 @@
     font-weight: 500;
   }
   
-  /* Edit Button Row */
   .recipe-page .edit-row {
     text-align: center;
     margin: 24px 0;
@@ -62,7 +60,6 @@
     height: 20px;
   }
   
-  /* Image Container */
   .recipe-page .image {
     width: 100%;
     height: 400px;
@@ -79,7 +76,6 @@
     object-position: center;
   }
   
-  /* Recipe Content Layout */
 .content {
     max-width: 1200px;
     margin: 40px auto;
@@ -98,12 +94,10 @@
   .content p {
     color: #444;
     line-height: 1.6;
-    margin-bottom: 24px;
     font-size: 1.1rem;
     word-wrap: break-word;
   }
   
-  /* Recipe Info Row */
   .recipe-info-row {
     display: flex;
     gap: 40px;
@@ -130,7 +124,6 @@
     font-weight: 500;
   }
   
-  /* Main Content Layout */
   .recipe-main-content {
     display: flex;
     gap: 40px;
@@ -147,7 +140,6 @@
     max-width: 35%;
   }
   
-  /* Ingredients Section */
   .ingredients-section ul {
     list-style: none;
     padding: 0;
@@ -166,9 +158,9 @@
   .ingredients-section .ingredient-amount-type {
     font-weight: bold; 
     color: #A2559D; 
-    width: 100px; 
+    width: 150px; 
     text-align: right; 
-    margin-right: 16px; 
+    margin-right: 32px; 
     white-space: nowrap; 
     flex-shrink: 0; 
   }
@@ -181,7 +173,6 @@
   
   
   
-  /* Steps Section */
   .steps-section ol {
     padding-left: 24px;
   }
@@ -192,7 +183,6 @@
     font-size: 1.1rem;
   }
   
-  /* Notes and Links Sections */
   .notes-section,
   .links-section {
     background-color: #f8f9fa;
@@ -205,13 +195,21 @@
   .links-section h3 {
     margin-top: 0;
   }
-  
-  .notes-section p,
-  .links-section p {
-    margin-bottom: 0;
+
+  .category {
+    display: inline-block;
+    background-color: #e6e7e7;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 0 8px 8px 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.2s ease;
   }
   
-  /* Responsive Adjustments */
+  
+  
   @media screen and (max-width: 968px) {
     .recipe-main-content {
       flex-direction: column;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../components/Form/form.css";
+import "../components/form.css";
 import { useParams, Navigate } from "react-router";
 import CreatableSelect from "react-select/creatable";
 
@@ -33,8 +33,6 @@ export default function EditPage() {
           paveikslėlis: data.file,
           pastabos: data.notes,
           nuorodos: data.links
-
-          // Set other form fields as needed
         });
 
         if(data.categories){
@@ -71,13 +69,13 @@ export default function EditPage() {
 
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the file selected by the user
+    const file = e.target.files[0]; 
     if (file) {
       setImage(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Set the image as data URL for preview
+        setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -85,7 +83,6 @@ export default function EditPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // const { description, title, cook_time, servings, notes, ingredients } = req.body;
     const data = new FormData();
     data.set("recipeId", id);
     data.set("title", formData.pavadinimas);
@@ -107,8 +104,7 @@ export default function EditPage() {
       body: data,
       credentials: "include",
     });
-
-    // Redirect to the recipe page
+    
     if (response.ok) {
       setRedirect(true);
     }
@@ -158,7 +154,7 @@ export default function EditPage() {
         <h2 className="form-title">Redaguoti receptą</h2>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form className="editRecipe-form" onSubmit={handleSubmit}>
         <label htmlFor="pavadinimas" className="field-title mb-sm">
           Pavadinimas
           <input

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, Navigate} from "react-router";
 import { UserContext } from "../UserContext";
 
 export default function Nav() {
@@ -15,13 +15,17 @@ export default function Nav() {
     });
   }, [setUserInfo]);
 
-  function logout() {
-    fetch("http://localhost:4000/logout", {
+  async function logout() {
+    const response = await fetch("http://localhost:4000/logout", {
       credentials: "include",
       method: "POST",
     }).then(() => {
       setUserInfo(null);
     });
+
+    if (response.ok && userInfo === null) {
+      return <Navigate to="/" />;
+    }
   }
 
   const username = userInfo?.username;
@@ -35,7 +39,7 @@ export default function Nav() {
         <ul>
           {username && (
             <>
-              <span>Welcome, {username}</span>
+              <p>Welcome, {username}</p>
               <li>
                 <Link to="/add-recipe">Kurti recepta</Link>
               </li>
@@ -45,7 +49,7 @@ export default function Nav() {
           {!username && (
             <>
               <li>
-                <Link to="/register">Registruoti</Link>
+                <Link to="/register">Registruotis</Link>
               </li>
               <li>
                 <Link to="/login">Prisijungti</Link>
@@ -54,14 +58,6 @@ export default function Nav() {
           )}
         </ul>
       </ul>
-      {/* <p>Receptai</p> */}
-      {/* <NavLink
-        to={``}
-      > */}
-      {/* <Link to="/">Home</Link> */}
-      {/* <Link to="recipes">Receptai</Link> */}
-      {/* <Link to="add-recipe">Kurti recepta</Link> */}
-      {/* </NavLink> */}
     </nav>
   );
 }
