@@ -1,36 +1,56 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { format, addHours  } from "date-fns";
+import { format, addHours } from "date-fns";
 import { UserContext } from "../UserContext";
+import "../components/recipePage.css";
 
 const RecipePage = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
+  const [desiredServings, setDesiredServings] = useState(null);
+  const [adjustedIngredients, setAdjustedIngredients] = useState([]);
   const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
     fetch(`http://localhost:4000/recipe/${id}`)
       .then((response) => response.json())
       .then((recipe) => {
-        // Parse steps if they are stored as a JSON string
         const parsedSteps = Array.isArray(recipe.steps)
           ? recipe.steps
           : JSON.parse(recipe.steps || "[]");
 
-        // Include parsed steps in the recipe state
         setRecipe({ ...recipe, steps: parsedSteps });
+        setDesiredServings(recipe.servings);
+        setAdjustedIngredients(recipe.ingredients);
       });
   }, [id]);
+
+  const handleServingsChange = (e) => {
+    const newServings = parseFloat(e.target.value);
+    setDesiredServings(newServings);
+
+    if (newServings > 0 && recipe?.ingredients) {
+      const scaledIngredients = recipe.ingredients.map((ingredient) => ({
+        ...ingredient,
+        amount: (ingredient.amount * newServings) / recipe.servings,
+      }));
+      setAdjustedIngredients(scaledIngredients);
+    }
+  };
 
   if (!recipe) {
     return <div>Loading...</div>;
   }
 
-
   return (
-    <div className="post-page">
+    <div className="recipe-page">
       <h1>{recipe.title}</h1>
-      <time>{format( addHours(new Date(recipe.update_date), 2), "yyyy-MM-dd HH:mm:ss")}</time>
+      <time>
+        {format(
+          addHours(new Date(recipe.update_date), 2),
+          "yyyy-MM-dd HH:mm:ss"
+        )}
+      </time>
       <div className="author">by @{recipe.fk_user}</div>
       {userInfo && userInfo.username === recipe.fk_user && (
         <>
@@ -63,24 +83,64 @@ const RecipePage = () => {
         )}
       </div>
       <div className="content">
-        <h3>Description</h3>
+        <h3>Apie</h3>
         <p>{recipe.description}</p>
-        <h3>Cook Time</h3>
-        <p>{recipe.cook_time} minutes</p>
-        <h3>Servings</h3>
-        <p>{recipe.servings}</p>
-        <h3>Notes</h3>
-        <p>{recipe.notes}</p>
-        <h3>Steps</h3>
-        <ol>
-          {recipe.steps.map((step, index) => (
-            <li key={index}>{step}</li>
-          ))}
-        </ol>
+        <div className="recipe-info-row">
+          <div className="info-item">
+            <h3>Gaminimo laikas</h3>
+            <p>{recipe.cook_time}</p>
+          </div>
+          <div className="info-item">
+            <h3>Porcijos</h3>
+            <p>{recipe.servings}</p>
+          </div>
+        </div>
+
+        <div className="recipe-main-content">
+          <div className="recipe-left-column">
+            <div className="ingredients-section">
+              <h3>Ingredientai</h3>
+              <label>
+                Keisti porcijų skaičių:{" "}
+                <input
+                  type="number"
+                  value={desiredServings || ""}
+                  onChange={handleServingsChange}
+                  min="1"
+                />
+              </label>
+              <ul>
+                {adjustedIngredients.map((ingredient, index) => (
+                  <li key={index}>
+                    <span className="ingredient-amount-type">
+                      {ingredient.amount.toFixed(2)} {ingredient.amount_type}
+                    </span>
+                    <span className="ingredient-name">{ingredient.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="steps-section">
+              <h3>Gaminimo būdas</h3>
+              <ol>
+                {recipe.steps.map((step, index) => (
+                  <li key={index}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <div className="recipe-right-column">
+            <div className="notes-section">
+              <h3>Pastabos</h3>
+              <p>{recipe.notes}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
-
 
 export default RecipePage;

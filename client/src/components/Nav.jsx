@@ -29,7 +29,7 @@ export default function Nav() {
   return (
     <nav>
       <ul>
-        <li>
+        <li >
           <Link to="/">Mamos receptai</Link>
         </li>
         <ul>

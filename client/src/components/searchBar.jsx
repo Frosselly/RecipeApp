@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './searchBar.css';
 import MagnifyGlass from '../assets/MagnifyGlass.svg';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 import RecipeCard from '../components/RecipeCard';
 
 const SearchBar = () => {
@@ -39,7 +39,7 @@ const SearchBar = () => {
                 <button type="submit" className="search-button">
                     <img src={MagnifyGlass} alt="search" className="search-icon" />
                 </button>
-                <Link to="/search">I paieską</Link>
+                {/* <Link to="/search">I paieską</Link> */}
             </div>
         </form>
 

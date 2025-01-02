@@ -8,12 +8,8 @@ export default function RecipeCard({ recipe }) {
   };
 
   return (
-    <div className="recipe-card">
-      <div className="recipe-image"
-        
-      >
-
-        
+    <Link to={`/recipes/${recipe.id}`} className="recipe-card">
+      <div className="recipe-image">
         <img 
           src={`http://localhost:4000/${recipe.imagePath}`}
           alt={recipe.title}
@@ -21,6 +17,6 @@ export default function RecipeCard({ recipe }) {
         />
       </div>
       <Link className="card-link" to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
-    </div>
+    </Link>
   );
 }
