@@ -1,4 +1,3 @@
-// recipeController.js
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const {
@@ -30,7 +29,7 @@ const handleImageUpload = (file) => {
 
 const handleNewRecipe = async (req, res) => {
   try {
-    // Verify user token
+    // Verify user
     const token = req.cookies.token;
     const info = await new Promise((resolve, reject) => {
       jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -38,10 +37,8 @@ const handleNewRecipe = async (req, res) => {
         resolve(decoded);
       });
     });
-    // Handle image upload if present
     const newPath = req.file ? handleImageUpload(req.file) : null;
 
-    // Extract recipe data and ingredients array
     const {
       description,
       title,
@@ -53,7 +50,6 @@ const handleNewRecipe = async (req, res) => {
       categories
     } = req.body;
 
-    // Step 1: Insert the recipe
     const recipeData = {
       description,
       title,
@@ -65,10 +61,9 @@ const handleNewRecipe = async (req, res) => {
       username: info.username,
     };
 
-    const recipeResult = await insertRecipe(recipeData); // Insert recipe
-    const recipeId = recipeResult.insertId; // Get the inserted recipe ID
+    const recipeResult = await insertRecipe(recipeData); 
+    const recipeId = recipeResult.insertId;
 
-    // Step 2: Insert ingredients with the `recipe_id` assigned
     const ingredientData = JSON.parse(ingredients).map((ingredient) => ({
       name: ingredient.pavadinimas,
       amount: ingredient.kiekis,
@@ -79,7 +74,6 @@ const handleNewRecipe = async (req, res) => {
     const ingredientsResult = await insertIngredients(ingredientData);
     const categoriesResult = await handleNewCategories(categories, recipeId);
 
-    // Respond with the recipe and ingredient details
     res.json({
       message: "Recipe and ingredients added successfully",
       recipeId,
@@ -134,19 +128,24 @@ const handleUpdateCategories = async (categories, recipe_id) => {
     name: category.label,
   }));
 
-  //Add new categories
+  //if category is without id its a new category
   const categoriesToInsert = categories.filter(
     (category) => category.id === null
   );
 
   let newCategoryIds = [];
-  const categoryNamesCheck = await getCategoriesIds(categoriesToInsert);
+  let categoryNamesCheck = [];
+  
+  //check if category to insert is already in db by name
+  if (categoriesToInsert.length > 0) {
+    categoryNamesCheck = await getCategoriesIds(categoriesToInsert);
+  }
 
   if (categoriesToInsert.length > 0 && categoryNamesCheck.length < categoriesToInsert.length) {
     newCategoryIds = await insertCategories(categoriesToInsert);
   }
 
-  //Delete categories that are no longer selected
+  //compare bound categories with new categories
   const currentCategories = await getRecipeCategories(recipe_id);
   const currentIds = currentCategories.map((category) => category.id);
   const newIds = categories.map((category) => category.id);
@@ -157,7 +156,7 @@ const handleUpdateCategories = async (categories, recipe_id) => {
     await deleteBoundCategories(idsToDelete, recipe_id);
   }
 
-  //Bind recipe to categories
+  //bind recipe to categories
   const categoriesToBind = categories
     .map((category) => category.id)
     .filter((id) => id !== null && id !== 0 && !currentIds.includes(id))
@@ -183,7 +182,7 @@ const handleGetAllCategories = async (req, res) => {
 
 const handleUpdateRecipe = async (req, res) => {
   try {
-    // Verify user token
+    // Verify user
     const token = req.cookies.token;
     const info = await new Promise((resolve, reject) => {
       jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -192,10 +191,9 @@ const handleUpdateRecipe = async (req, res) => {
       });
     });
 
-    // Handle file upload if new image is provided
-    const newPath = req.file ? handleImageUpload(req.file) : null;
 
-    // Extract recipe data and ingredients array
+    const newPath = req.file ? handleImageUpload(req.file) : null;
+    
     const {
       recipeId,
       description,
@@ -263,7 +261,7 @@ const handleUpdateIngredients = async (ingredients, recipe_id) => {
     .map((ingredient) => ingredient.id)
     .filter((id) => id !== null);
 
-  // Step 2: Identify operations
+  
   const idsToDelete = currentIds.filter((id) => !incomingIds.includes(id));
   const ingredientsToUpdate = ingredients.filter(
     (ingredient) => ingredient.id !== null
@@ -272,22 +270,18 @@ const handleUpdateIngredients = async (ingredients, recipe_id) => {
     (ingredient) => ingredient.id === null
   );
 
-  // Step 3: Delete removed ingredients
+  
   if (idsToDelete.length > 0) {
     await deleteIngredients(idsToDelete);
   }
 
-  // Step 4: Update existing ingredients
+  
   for (const ingredient of ingredientsToUpdate) {
     await updateIngredient(ingredient);
   }
   if (ingredientsToInsert.length > 0) {
     await insertIngredients(ingredientsToInsert);
   }
-
-  // for (const ingredient of ingredientsToInsert) {
-  //   await addIngredient(ingredient, recipe_id);
-  // }
 
   return true;
 };

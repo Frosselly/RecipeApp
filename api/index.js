@@ -1,4 +1,3 @@
-//express mysql path cors bcrypt jsonwebtoken cookie parser multer fs
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
@@ -6,10 +5,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const multer = require('multer');
-const fs = require('fs');
 require('dotenv').config();
-
 
 const app = express();
 app.use(express.json());
@@ -18,42 +14,11 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }));
 app.use(cookieParser());
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-//TODO -seperate the enviromental stuff
-
-app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    // Handle multer-specific errors
-    if (err.code === 'LIMIT_FILE_SIZE') {
-      // Custom error message for file size limit exceeded
-      return res.status(400).json({ error: 'File is too large. Maximum size is 5MB.' });
-    }
-    // Handle other multer errors
-    return res.status(500).json({ error: `Multer error: ${err.message}` });
-  }
-
-  // Handle any other errors
-  next(err);
-});
-
 const db = require("./database");
 
 const recipeRouter = require('./routes/recipeRoutes');
 app.use('/', recipeRouter);
-
-const handleImageUpload = (file) => {
-    if (!file) return null;
-    
-    const { originalname, path } = file;
-    const extension = originalname.split(".").pop();
-    const newPath = `${path}.${extension}`;
-    fs.renameSync(path, newPath);
-    return newPath;
-};
-
-
 
 app.post('/register', async (req, res) => {
     const {email, username, password} = req.body;
@@ -97,6 +62,10 @@ app.post('/logout', async (req, res) => {
 
 app.get('/profile', async (req, res) => {
     const token = req.cookies.token;
+    if (!token) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
     jwt.verify(token, process.env.SECRET_KEY, (err, info) => {
       if (err) {
         console.error("Error verifying token:", err);

@@ -7,7 +7,6 @@ const insertIngredients = async (ingredients) => {
         VALUES ?
       `;
 
-  // Format ingredients for bulk insert
   const values = ingredients.map((ing) => [ing.name, ing.amount, ing.amount_type, ing.recipe_id]);
 
   const result = await db.query(query, [values]);
@@ -24,7 +23,6 @@ const insertCategories = async (categories) => {
         VALUES ?
       `;
 
-  // Format categories for bulk insert
   const values = categories.map((cat) => [cat.name]);
 
   const result = await db.query(query, [values]);
@@ -54,7 +52,6 @@ const bindRecipeToCategories = async (categories, recipe_id) => {
         VALUES ?
       `;
 
-  // Format categories for bulk insert
   const values = categories.map((cat) => [recipe_id, cat]);
 
   const result = await db.query(query, [values]);
@@ -100,32 +97,6 @@ const insertRecipe = async ({
   return result;
 };
 
-// const updateRecipe = (id, title, summary, content, imagePath) => {
-
-//   // id	description	title	ingredient_id	cook_time	servings	update_date	notes	fk_user
-
-//   //recipe has id I use it to save ingredients
-//   // INGREDIENT id	name	amount	amount_type
-//   //"UPDATE Recipe SET title = ?, description = ?, ingredient_id =?, cook_time = ?, servings = ?, notes = ?, imagePath = ? WHERE id = ?"
-
-//     return new Promise((resolve, reject) => {
-//         if (imagePath === null) {
-//             query = "UPDATE Recipes SET title = ?, description = ?, ingredient_id =?, cook_time = ?, servings = ?, notes = ? WHERE id = ?";
-//             params = [title, description, ingredient_id, cook_time, servings, notes, id];
-//         } else {
-//             query = "UPDATE Recipes SET title = ?, description = ?, ingredient_id =?, cook_time = ?, servings = ?, notes = ?, imagePath = ? WHERE id = ?";
-//             params = [title, description, ingredient_id, cook_time, servings, notes, imagePath, id];
-//         }
-//         db.query(query, params, (err, result) => {
-//             if (err) {
-//                 reject(new Error("Database error while updating post"));
-//                 return;
-//             }
-//             resolve(result);
-//         });
-//     });
-// };
-
 const findRecipeById = async (id) => {
   const query = "SELECT * FROM Recipes WHERE id = ? LIMIT 1";
   const results = await db.query(query, [id]);
@@ -139,7 +110,6 @@ const getRecipeIngredients = async (recipeId) => {
         `;
 
   const result = await db.query(query, [recipeId]);
-  // const ingredientIds = result[0]?.ingredient_id.split(",").map(Number) || [];
   return result;
 };
 
@@ -183,7 +153,6 @@ const updateRecipe = async (
 
   let params = [description, title, cook_time, servings, steps, notes];
 
-  // Only include image update if new image is provided
   if (imagePath) {
     query += `, imagePath = ?`;
     params.push(imagePath);
@@ -204,6 +173,7 @@ const updateIngredient = async (ingredient) => {
   return result;
 }
 
+// not used
 const addIngredient = async (ingredient, recipe_id) => {
   const result = await db.query(
     "INSERT INTO Ingredients (recipe_id, name, amount, amount_type) VALUES (?, ?, ?, ?)",
